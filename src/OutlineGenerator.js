@@ -61,40 +61,73 @@ const OutlineGenerator = ({ exercises }) => {
 
 
     const generateOutline = (exercises) => {
+        const calculatePlates = (weight) => {
+            // Assuming the bar itself weighs 45 pounds and is included in the "weight" variable
+            let remainingWeight = weight - 45; // Subtract the bar weight
+            const plates = [45, 25, 10, 5, 2.5];
+            const platesNeeded = [];
+
+            // Divide by 2 because we will put plates on both sides of the bar
+            remainingWeight /= 2;
+
+            for (let plate of plates) {
+                while (remainingWeight >= plate) {
+                    platesNeeded.push(plate);
+                    remainingWeight -= plate;
+                }
+            }
+
+            // If there's a remainder less than the smallest plate, we can't achieve the exact weight
+            if (remainingWeight > 0) {
+                console.warn('Cannot achieve the exact weight with the given plates.');
+            }
+
+            return platesNeeded;
+        };
+
         return (
             <Table striped bordered hover>
                 <thead>
                     <tr>
                         <th>Exercise</th>
-                        <th>Training Max</th>
-                        <th>Week Details</th>
+                        <th width="100px">Training Max</th>
+                        {/* Check if exercises array is not empty and then create a header for each week */}
+                        {exercises.length > 0 && exercises[0].weekDetails.map((_, weekIndex) => (
+                            <th key={weekIndex}>Week {weekIndex + 1}</th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
                     {exercises.map((exercise, index) => (
-                        <tr key={index}>
+                        <tr key={exercise.id}> {/* It's better to use unique `id` instead of index when available */}
                             <td>{exercise.name || 'Unnamed'}</td>
                             <td>{exercise.trainingMax}</td>
-                            <td>
-                                {exercise.weekDetails.map((detail, weekIndex) => (
-                                    <div key={weekIndex}>
-                                        <strong>Week {weekIndex + 1}:</strong><br />
-                                        Sets: {detail.sets},<br />
-                                        Reps: {detail.reps},<br />
-                                        Percentage: {detail.pct}%<br />
-                                    </div>
-                                ))}
-                            </td>
+                            {/* Render a cell for each week */}
+                            {exercise.weekDetails.map((detail, weekIndex) => {
+                                const weight = Math.round((detail.pct * exercise.trainingMax / 100) / 5) * 5;
+                                const plates = calculatePlates(weight); // Calculate the plates needed for this weight
+
+                                return (
+                                    <td key={weekIndex}>
+                                        <div>{detail.pct}%</div>
+                                        <div>Weight: {weight}</div>
+                                        <div>Sets: {detail.sets}</div>
+                                        <div>Reps: {detail.reps}</div>
+                                        <div>Plates: {plates.join(', ')}</div> {/* Display the plates */}
+                                    </td>
+                                );
+                            })}
                         </tr>
                     ))}
                 </tbody>
             </Table>
+
         );
     };
 
     return (
         <>
-            {/* <Button variant="primary" onClick={handleGenerateClick}>Generate</Button> */}
+            <Button variant="outline-dark" onClick={handleGenerateClick}>Generate in Browser</Button>
             <Button variant="outline-success" className="fw-bold" onClick={handleExportClick} className="ml-2">Export to Excel</Button>
             <div className="mt-3">
                 {outline}

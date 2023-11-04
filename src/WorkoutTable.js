@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Button, Table, Dropdown } from 'react-bootstrap';
+import { Button, Table, Dropdown, Modal } from 'react-bootstrap';
 import ExerciseRow from './ExerciseRow';
 import { exerciseOptions as importedExerciseOptions } from './ExerciseList';
 
@@ -13,6 +13,13 @@ const WorkoutTable = ({ exercises, setExercises }) => {
     const [weeks, setWeeks] = useState(3);
 
     const [exerciseOptions, setExerciseOptions] = useState(importedExerciseOptions);
+
+    // State for the delete confirmation modal
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [deleteType, setDeleteType] = useState(null);
+    const [deleteIndex, setDeleteIndex] = useState(null);
+
 
     const handleExerciseChange = (updatedExercise, index) => {
         const newExercises = [...exercises];
@@ -30,10 +37,37 @@ const WorkoutTable = ({ exercises, setExercises }) => {
         setExercises([...exercises, newExercise]);
     };
 
-    const handleDeleteExercise = (index) => {
-        const newExercises = exercises.filter((_, i) => i !== index);
-        setExercises(newExercises);
+    // Function to show the delete confirmation modal
+    const handleDeleteConfirmation = (type, index) => {
+        setDeleteType(type);
+        setDeleteIndex(index);
+        setShowConfirmation(true);
     };
+
+
+    // Function to close the delete confirmation modal
+    const handleClose = () => setShowDeleteModal(false);
+
+    // Function to delete the exercise after confirmation
+    const handleConfirmedDelete = () => {
+        if (deleteType === 'exercise') {
+            const newExercises = exercises.filter((_, i) => i !== deleteIndex);
+            setExercises(newExercises);
+        } else if (deleteType === 'week') {
+            const updatedExercises = exercises.map(exercise => {
+                const updatedWeekDetails = exercise.weekDetails.filter((_, index) => index !== deleteIndex);
+                return { ...exercise, weekDetails: updatedWeekDetails };
+            });
+            setExercises(updatedExercises);
+            setWeeks(prevWeeks => prevWeeks - 1);
+        }
+        setShowConfirmation(false);
+    };
+
+    const handleCancelDelete = () => {
+        setShowConfirmation(false);
+    };
+
 
     const handleCreateExerciseOption = (newExerciseName, exerciseIndex) => {
         const newOption = { label: newExerciseName, value: newExerciseName };
@@ -162,7 +196,7 @@ const WorkoutTable = ({ exercises, setExercises }) => {
                 <Dropdown.Item onClick={() => handleFillDown(index, 'reps')}>
                     Fill Down Reps
                 </Dropdown.Item>
-                <Dropdown.Item onClick={() => deleteWeek(index)}>
+                <Dropdown.Item onClick={() => handleDeleteConfirmation('week', index)}>
                     Delete Week
                 </Dropdown.Item>
             </Dropdown.Menu>
@@ -209,7 +243,7 @@ const WorkoutTable = ({ exercises, setExercises }) => {
                             exercise={exercise}
                             index={index}
                             onExerciseChange={(updatedExercise) => handleExerciseChange(updatedExercise, index)}
-                            onDeleteExercise={() => handleDeleteExercise(index)}
+                            onDeleteExercise={() => handleDeleteConfirmation('exercise', index)}
                             exerciseOptions={exerciseOptions}
                             onCreateExerciseOption={(newExerciseName, exerciseIndex) => handleCreateExerciseOption(newExerciseName, exerciseIndex)}
                             moveRow={moveRow}
@@ -218,6 +252,25 @@ const WorkoutTable = ({ exercises, setExercises }) => {
                 </tbody>
 
             </Table>
+            {/* Delete confirmation modal */}
+            {showConfirmation && (
+                <Modal show={showConfirmation} onHide={handleCancelDelete}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Confirm Deletion</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        Are you sure you want to delete this {deleteType === 'exercise' ? 'exercise' : 'week'}?
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCancelDelete}>
+                            Cancel
+                        </Button>
+                        <Button variant="danger" onClick={handleConfirmedDelete}>
+                            Delete
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            )}
         </DndProvider>
     );
 
