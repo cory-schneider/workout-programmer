@@ -44,10 +44,6 @@ const WorkoutTable = ({ exercises, setExercises }) => {
         setShowConfirmation(true);
     };
 
-
-    // Function to close the delete confirmation modal
-    const handleClose = () => setShowDeleteModal(false);
-
     // Function to delete the exercise after confirmation
     const handleConfirmedDelete = () => {
         if (deleteType === 'exercise') {
@@ -67,7 +63,6 @@ const WorkoutTable = ({ exercises, setExercises }) => {
     const handleCancelDelete = () => {
         setShowConfirmation(false);
     };
-
 
     const handleCreateExerciseOption = (newExerciseName, exerciseIndex) => {
         const newOption = { label: newExerciseName, value: newExerciseName };

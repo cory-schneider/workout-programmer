@@ -1,14 +1,35 @@
 import React, { useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import * as XLSX from 'xlsx';
+import ReactDOMServer from 'react-dom/server';
 
 const OutlineGenerator = ({ exercises }) => {
     const [outline, setOutline] = useState('');
 
+    // const handleGenerateClick = () => {
+    //     const outlineContent = generateOutline(exercises);
+    //     setOutline(outlineContent);
+    // };
+
     const handleGenerateClick = () => {
         const outlineContent = generateOutline(exercises);
-        setOutline(outlineContent);
+        // Convert the React component to a string of HTML
+        const htmlContent = ReactDOMServer.renderToStaticMarkup(outlineContent);
+
+        const printWindow = window.open('', '_blank');
+        const stylesheets = Array.from(document.querySelectorAll('link[rel="stylesheet"], style')).map(style => style.outerHTML).join('');
+
+        printWindow.document.write('<html><head><title>Print Outline</title>');
+        // Link to a stylesheet if needed, or include inline styles
+        printWindow.document.write('<style>/* Your CSS here */</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(htmlContent); // Use the HTML string
+        printWindow.document.write('</body></html>');
+        printWindow.document.close(); // Necessary for IE >= 10
+        printWindow.focus(); // Necessary for IE >= 10
     };
+
+
 
     const handleExportClick = () => {
         // Create a new workbook
@@ -113,7 +134,7 @@ const OutlineGenerator = ({ exercises }) => {
                                         <div>Weight: {weight}</div>
                                         <div>Sets: {detail.sets}</div>
                                         <div>Reps: {detail.reps}</div>
-                                        <div>Plates: {plates.join(', ')}</div> {/* Display the plates */}
+                                        <div>ⵙ {plates.join(', ')}</div> {/* Display the plates */}
                                     </td>
                                 );
                             })}
@@ -123,12 +144,13 @@ const OutlineGenerator = ({ exercises }) => {
             </Table>
 
         );
+
     };
 
     return (
         <>
-            <Button variant="outline-dark" onClick={handleGenerateClick}>Generate in Browser</Button>
-            <Button variant="outline-success" className="fw-bold" onClick={handleExportClick} className="ml-2">Export to Excel</Button>
+            <Button variant="outline-dark" className="fw-bold" onClick={handleGenerateClick}>Generate Outline</Button>
+            <Button variant="outline-success" className="fw-bold" onClick={handleExportClick}>Generate Excel</Button>
             <div className="mt-3">
                 {outline}
             </div>
