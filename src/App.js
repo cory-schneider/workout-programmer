@@ -104,7 +104,7 @@ function App() {
                 <Accordion.Item eventKey="2">
                   <Accordion.Header>Export Features</Accordion.Header>
                   <Accordion.Body>
-                    Things and stuff.
+                    Export to Excel.
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="5">
