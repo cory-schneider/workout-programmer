@@ -37,8 +37,9 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       <div className="App">
         <header className="App-header">
+          <img src="/logo512.png" alt="Workout Plan Generator Logo" className="App-logo" />
           <h1>Workout Plan Generator</h1>
-          <div>
+          {/* <div>
             <Dropdown>
               <Dropdown.Toggle
 
@@ -59,12 +60,10 @@ function App() {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-          </div>
-          <div>
-            <Button variant="primary" onClick={handleShow}>
-              Read Me!
-            </Button>
-          </div>
+          </div> */}
+          <Button variant="primary" onClick={handleShow}>
+            Read Me!
+          </Button>
         </header>
         <main className="App-content">
           <Offcanvas show={show} onHide={handleClose}>

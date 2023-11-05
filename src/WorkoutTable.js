@@ -6,7 +6,6 @@ import { Button, Table, Dropdown, Modal } from 'react-bootstrap';
 import ExerciseRow from './ExerciseRow';
 import { exerciseOptions as importedExerciseOptions } from './ExerciseList';
 
-
 // WorkoutTable component
 const WorkoutTable = ({ exercises, setExercises }) => {
 
@@ -201,7 +200,7 @@ const WorkoutTable = ({ exercises, setExercises }) => {
     // Render the WorkoutTable component
     return (
         <DndProvider backend={HTML5Backend}>
-            <Table bordered hover>
+            <Table bordered hover responsive="sm">
                 <thead>
                     <tr>
                         <th>

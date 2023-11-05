@@ -9,12 +9,12 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 15s linear;
   }
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #323741;
   /* Darkish blue shade */
   height: 60px;
   padding: 10px 20px;
@@ -38,7 +38,7 @@
 }
 
 .App-header:hover {
-  background-color: #1e2329;
+  background-color: #22272e;
   /* Slightly darker shade for hover effect */
 }
 
@@ -91,18 +91,6 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-.exercise-select,
-.training-max-input,
-.delete-button-cell {
-  /* display: flex; */
-  align-items: center;
-  /* This will vertically center the content */
-  justify-content: center;
-  /* This centers it horizontally, if you want that */
-  height: 100%;
-  /* Make the flex container fill the cell */
-}
-
 /* The CreatableSelect might need additional styling if it doesn't fill the cell */
 .exercise-select>div {
   width: 100%;
@@ -111,4 +99,5 @@ input[type=number] {
 
 .accordion-button {
   font-weight: bold;
+  border-bottom: 2px solid #7f8488;
 }
