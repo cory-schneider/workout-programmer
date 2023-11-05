@@ -6,29 +6,45 @@ import ReactDOMServer from 'react-dom/server';
 const OutlineGenerator = ({ exercises }) => {
     const [outline, setOutline] = useState('');
 
-    // const handleGenerateClick = () => {
-    //     const outlineContent = generateOutline(exercises);
-    //     setOutline(outlineContent);
-    // };
-
     const handleGenerateClick = () => {
         const outlineContent = generateOutline(exercises);
-        // Convert the React component to a string of HTML
         const htmlContent = ReactDOMServer.renderToStaticMarkup(outlineContent);
 
         const printWindow = window.open('', '_blank');
         const stylesheets = Array.from(document.querySelectorAll('link[rel="stylesheet"], style')).map(style => style.outerHTML).join('');
 
         printWindow.document.write('<html><head><title>Print Outline</title>');
-        // Link to a stylesheet if needed, or include inline styles
-        printWindow.document.write('<style>/* Your CSS here */</style>');
+        // Include the existing stylesheets if they are relevant to the print content
+        printWindow.document.write(stylesheets);
+        // Add custom styles
+        printWindow.document.write(`
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                font-weight: bold;
+            }
+            .exercise-name {
+                font-weight: bold;
+            }
+            th, td {
+                text-align: center;
+                vertical-align: middle;
+            }
+        </style>
+    `);
         printWindow.document.write('</head><body>');
         printWindow.document.write(htmlContent); // Use the HTML string
         printWindow.document.write('</body></html>');
         printWindow.document.close(); // Necessary for IE >= 10
         printWindow.focus(); // Necessary for IE >= 10
-    };
 
+        // You can add a slight delay before calling print to ensure the content is fully loaded
+        // setTimeout(() => {
+        //     printWindow.print();
+        // }, 500);
+    };
 
 
     const handleExportClick = () => {
@@ -86,15 +102,19 @@ const OutlineGenerator = ({ exercises }) => {
             // Assuming the bar itself weighs 45 pounds and is included in the "weight" variable
             let remainingWeight = weight - 45; // Subtract the bar weight
             const plates = [45, 25, 10, 5, 2.5];
-            const platesNeeded = [];
+            const plateCounts = {};
 
             // Divide by 2 because we will put plates on both sides of the bar
             remainingWeight /= 2;
 
             for (let plate of plates) {
+                let count = 0;
                 while (remainingWeight >= plate) {
-                    platesNeeded.push(plate);
                     remainingWeight -= plate;
+                    count++;
+                }
+                if (count > 0) {
+                    plateCounts[plate] = count;
                 }
             }
 
@@ -103,8 +123,24 @@ const OutlineGenerator = ({ exercises }) => {
                 console.warn('Cannot achieve the exact weight with the given plates.');
             }
 
-            return platesNeeded;
+            // Create an array from the plate counts
+            const platesNeeded = Object.keys(plateCounts).map(plate => ({
+                weight: plate,
+                count: plateCounts[plate]
+            }));
+
+            // Sort the array from highest weight to lowest
+            platesNeeded.sort((a, b) => b.weight - a.weight);
+
+            // Format the plate counts into a string
+            const formattedPlates = platesNeeded.map(plate => {
+                return `${plate.count} x ${plate.weight}`;
+            });
+
+            return formattedPlates.join(', ');
         };
+
+
 
         return (
             <Table striped bordered hover>
@@ -121,7 +157,7 @@ const OutlineGenerator = ({ exercises }) => {
                 <tbody>
                     {exercises.map((exercise, index) => (
                         <tr key={exercise.id}> {/* It's better to use unique `id` instead of index when available */}
-                            <td>{exercise.name || 'Unnamed'}</td>
+                            <td className="exercise-name">{exercise.name || 'Unnamed'}</td>
                             <td>{exercise.trainingMax}</td>
                             {/* Render a cell for each week */}
                             {exercise.weekDetails.map((detail, weekIndex) => {
@@ -130,11 +166,9 @@ const OutlineGenerator = ({ exercises }) => {
 
                                 return (
                                     <td key={weekIndex}>
-                                        <div>{detail.pct}%</div>
-                                        <div>Weight: {weight}</div>
-                                        <div>Sets: {detail.sets}</div>
-                                        <div>Reps: {detail.reps}</div>
-                                        <div>ⵙ {plates.join(', ')}</div> {/* Display the plates */}
+                                        <p>{detail.pct}%: {weight}</p>
+                                        <p>{detail.sets} sets of {detail.reps} reps</p>
+                                        <div>ⵙ {plates}</div> {/* Display the plates */}
                                     </td>
                                 );
                             })}

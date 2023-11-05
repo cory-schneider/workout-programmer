@@ -5,18 +5,6 @@ import CreatableSelect from 'react-select/creatable';
 import { exerciseOptions } from './ExerciseList'; // Ensure this is correctly exported
 import { Form, Row, InputGroup, Button } from 'react-bootstrap';
 
-// const DragHandle = ({ drag }) => (
-//     <Button
-//         variant="outline-dark"
-//         size="sm"
-//         className="drag-handle"
-//         ref={drag} // Only this button is the drag handle
-//     >
-//         ☰
-//     </Button>
-// );
-
-
 // This will be the draggable row component
 const ExerciseRow = ({ exercise, index, onExerciseChange, moveRow, onCreateExerciseOption, onDeleteExercise }) => {
     const ref = React.useRef(null);
@@ -116,9 +104,11 @@ const ExerciseRow = ({ exercise, index, onExerciseChange, moveRow, onCreateExerc
 
     // Render the input boxes for the exercise row
     return (
-        <tr ref={ref} style={{ opacity }}>
+        <tr className="exercise-row" ref={ref} style={{ opacity }}>
             <td>
                 <CreatableSelect
+                    menuPortalTarget={document.body}
+                    styles={{ menuPortal: base => ({ ...base, zIndex: 1 }) }}
                     isClearable
                     isSearchable
                     onChange={handleSelectChange}

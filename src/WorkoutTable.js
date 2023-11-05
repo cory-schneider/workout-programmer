@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -9,7 +9,19 @@ import { exerciseOptions as importedExerciseOptions } from './ExerciseList';
 // WorkoutTable component
 const WorkoutTable = ({ exercises, setExercises }) => {
 
-    const [weeks, setWeeks] = useState(3);
+    const defaultWeeks = 3;
+    const determineWeeks = () => {
+        if (exercises.length > 0 && exercises[0].weekDetails) {
+            return exercises[0].weekDetails.length;
+        }
+        return defaultWeeks; // default to 3 weeks
+    };
+
+    const [weeks, setWeeks] = useState(determineWeeks());
+
+    useEffect(() => {
+        setWeeks(determineWeeks());
+    }, [exercises]);
 
     const [exerciseOptions, setExerciseOptions] = useState(importedExerciseOptions);
 
@@ -108,7 +120,6 @@ const WorkoutTable = ({ exercises, setExercises }) => {
         }
     };
 
-
     const duplicateWeek = (weekIndex) => {
         if (weekIndex < 0 || weekIndex >= weeks) {
             console.error('Week index is out of bounds.');
@@ -164,9 +175,6 @@ const WorkoutTable = ({ exercises, setExercises }) => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-                <Dropdown.Item onClick={() => duplicateWeek(index)}>
-                    Duplicate Week
-                </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleFillDown(index, 'pct')}>
                     Fill Down %
                 </Dropdown.Item>
@@ -176,7 +184,11 @@ const WorkoutTable = ({ exercises, setExercises }) => {
                 <Dropdown.Item onClick={() => handleFillDown(index, 'reps')}>
                     Fill Down Reps
                 </Dropdown.Item>
-                <Dropdown.Item onClick={() => handleDeleteConfirmation('week', index)}>
+                <Dropdown.Item onClick={() => duplicateWeek(index)}>
+                    Duplicate Week
+                </Dropdown.Item>
+                <hr></hr>
+                <Dropdown.Item className="red-text" onClick={() => handleDeleteConfirmation('week', index)}>
                     Delete Week
                 </Dropdown.Item>
             </Dropdown.Menu>
@@ -186,7 +198,7 @@ const WorkoutTable = ({ exercises, setExercises }) => {
     // Render the WorkoutTable component
     return (
         <DndProvider backend={HTML5Backend}>
-            <Table bordered hover responsive>
+            <Table className="WorkoutTable" bordered hover responsive>
                 <thead>
                     <tr>
                         <th className="exercise-column">
@@ -229,7 +241,6 @@ const WorkoutTable = ({ exercises, setExercises }) => {
                         />
                     ))}
                 </tbody>
-
             </Table>
             {/* Delete confirmation modal */}
             {showConfirmation && (

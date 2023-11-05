@@ -78,9 +78,23 @@ input[type=number] {
 }
 
 @media (min-width: 992px) {
-  .WorkoutTable {
+  .WorkoutTableWrapper {
     padding: 50px;
   }
+}
+
+.WorkoutTableWrapper {
+  margin: auto;
+  max-width: 1200px;
+}
+
+/* Applies to the last child if it is also the first child (meaning there's only one child) */
+.WorkoutTable tbody tr.exercise-row:last-child:first-child {
+  height: 200px;
+}
+
+.red-text {
+  color: red;
 }
 
 .exercise-column {
@@ -96,7 +110,7 @@ input[type=number] {
 }
 
 .week-add-column {
-  width: 100px;
+  min-width: 100px;
 }
 
 .accordion-button {
