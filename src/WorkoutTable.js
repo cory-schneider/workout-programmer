@@ -14,7 +14,6 @@ const WorkoutTable = ({ exercises, setExercises }) => {
     const [exerciseOptions, setExerciseOptions] = useState(importedExerciseOptions);
 
     // State for the delete confirmation modal
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [deleteType, setDeleteType] = useState(null);
     const [deleteIndex, setDeleteIndex] = useState(null);
@@ -85,19 +84,6 @@ const WorkoutTable = ({ exercises, setExercises }) => {
         }));
         setExercises(updatedExercises);
         setWeeks(weeks + 1);
-    };
-
-    // Function to delete a week at a specific index
-    const deleteWeek = (weekIndex) => {
-        const updatedExercises = exercises.map(exercise => {
-            // Filter out the week detail at the specific index for each exercise
-            const updatedWeekDetails = exercise.weekDetails.filter((_, index) => index !== weekIndex);
-            return { ...exercise, weekDetails: updatedWeekDetails };
-        });
-        // Update the state with the new exercises array
-        setExercises(updatedExercises);
-        // Also update the weeks state
-        setWeeks(prevWeeks => prevWeeks - 1);
     };
 
     const handleFillDown = (weekIndex, attribute) => {
@@ -200,13 +186,10 @@ const WorkoutTable = ({ exercises, setExercises }) => {
     // Render the WorkoutTable component
     return (
         <DndProvider backend={HTML5Backend}>
-            <Table bordered hover responsive="sm">
+            <Table bordered hover responsive>
                 <thead>
                     <tr>
-                        <th>
-                            {/* <span
-                                onClick={handleAddExercise}> ➕
-                            </span> */}
+                        <th className="exercise-column">
                             <Button
                                 variant="outline-dark"
                                 size="sm"
@@ -215,11 +198,13 @@ const WorkoutTable = ({ exercises, setExercises }) => {
                                 Exercise ➕
                             </Button>
                         </th>
-                        <th>Training Max</th>
+                        <th className="trainingMax-column">Training Max</th>
                         {weekHeaderDropdowns.map((dropdown, index) => (
-                            <th key={index}>{dropdown}</th>
+                            <th
+                                className="week-column"
+                                key={index}>{dropdown}</th>
                         ))}
-                        <th className="text-start">
+                        <th className="week-add-column">
                             <Button
                                 variant="outline-dark"
                                 size="sm"

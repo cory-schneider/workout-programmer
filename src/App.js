@@ -125,8 +125,10 @@ function App() {
               </Accordion>
             </Offcanvas.Body>
           </Offcanvas>
-          <WorkoutTable exercises={exercises} setExercises={setExercises} />
-          <OutlineGenerator exercises={exercises} />
+          <div className="WorkoutTable">
+            <WorkoutTable exercises={exercises} setExercises={setExercises} />
+            <OutlineGenerator exercises={exercises} />
+          </div>
         </main>
       </div>
 

@@ -3,7 +3,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from './ItemTypes'; // You'll define this object to specify draggable types
 import CreatableSelect from 'react-select/creatable';
 import { exerciseOptions } from './ExerciseList'; // Ensure this is correctly exported
-import { Form, Col, Row, InputGroup, Button, ButtonGroup } from 'react-bootstrap';
+import { Form, Row, InputGroup, Button } from 'react-bootstrap';
 
 // const DragHandle = ({ drag }) => (
 //     <Button
@@ -117,9 +117,8 @@ const ExerciseRow = ({ exercise, index, onExerciseChange, moveRow, onCreateExerc
     // Render the input boxes for the exercise row
     return (
         <tr ref={ref} style={{ opacity }}>
-            <td width="275px">
+            <td>
                 <CreatableSelect
-                    className="exercise-select"
                     isClearable
                     isSearchable
                     onChange={handleSelectChange}
@@ -131,7 +130,7 @@ const ExerciseRow = ({ exercise, index, onExerciseChange, moveRow, onCreateExerc
                     value={exercise.name ? { label: exercise.name, value: exercise.name } : null}
                 />
             </td>
-            <td width="85px">
+            <td>
                 <Form.Control
                     type="number"
                     value={exercise.trainingMax}
@@ -140,7 +139,7 @@ const ExerciseRow = ({ exercise, index, onExerciseChange, moveRow, onCreateExerc
                 />
             </td>
             {exercise.weekDetails.map((weekDetail, weekIndex) => (
-                <td width="120px" key={`${exercise.id}-week-${weekIndex}`}>
+                <td key={`${exercise.id}-week-${weekIndex}`}>
                     <Row>
                         <InputGroup size="sm">
                             <Form.Control
@@ -177,22 +176,24 @@ const ExerciseRow = ({ exercise, index, onExerciseChange, moveRow, onCreateExerc
                 </td>
             ))
             }
-            <td className="text-start">
-                <ButtonGroup size="sm">
-                    <Button
-                        variant="outline-dark"
-                        className="drag-handle"
-                        ref={drag} // Only this button is the drag handle
-                    >
-                        ☰
-                    </Button>
-                    <Button
-                        variant="outline-danger"
-                        onClick={onDeleteExercise}
-                    >
-                        🗑
-                    </Button>
-                </ButtonGroup>
+            <td>
+                {/* <ButtonGroup size="sm"> */}
+                <Button
+                    variant="outline-dark"
+                    className="drag-handle"
+                    size="sm"
+                    ref={drag} // Only this button is the drag handle
+                >
+                    ☰
+                </Button>
+                <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={onDeleteExercise}
+                >
+                    🗑
+                </Button>
+                {/* </ButtonGroup> */}
             </td>
 
         </tr >
