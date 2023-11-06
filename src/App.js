@@ -27,6 +27,30 @@ function App() {
     ],
   }];
 
+  const initializeExercises = () => {
+    const savedData = localStorage.getItem('exercisesData');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      // Check if the saved data version matches the current version
+      if (parsedData.version === CURRENT_VERSION) {
+        return parsedData.exercises;
+      }
+    }
+    // Return initial state if nothing is saved or versions don't match
+    return getInitialState();
+  };
+
+  const [exercises, setExercises] = useState(initializeExercises);
+
+  useEffect(() => {
+    // Save to localStorage with versioning
+    const exercisesData = {
+      version: CURRENT_VERSION,
+      exercises: exercises
+    };
+    localStorage.setItem('exercisesData', JSON.stringify(exercisesData));
+  }, [exercises]);
+
   const [showResetConfirmation, setShowResetConfirmation] = useState(false);
 
   const handleCancelReset = () => {
@@ -41,32 +65,6 @@ function App() {
   const handleDeleteConfirmation = () => {
     setShowResetConfirmation(true);
   };
-
-  const initializeExercises = () => {
-    const savedData = localStorage.getItem('exercisesData');
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      // Check if the saved data version matches the current version
-      if (parsedData.version === CURRENT_VERSION) {
-        return parsedData.exercises;
-      }
-    }
-    // Return initial state if nothing is saved or versions don't match
-    return getInitialState();
-  };
-
-
-  const [exercises, setExercises] = useState(initializeExercises);
-
-  useEffect(() => {
-    // Save to localStorage with versioning
-    const exercisesData = {
-      version: CURRENT_VERSION,
-      exercises: exercises
-    };
-    localStorage.setItem('exercisesData', JSON.stringify(exercisesData));
-  }, [exercises]);
-
 
   const [show, setShow] = useState(false);
 
@@ -179,7 +177,7 @@ function App() {
       {showResetConfirmation && (
         <Modal show={showResetConfirmation} onHide={handleCancelReset}>
           <Modal.Header closeButton>
-            <Modal.Title>Confirm Deletion</Modal.Title>
+            <Modal.Title>Confirm Reset</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             Are you sure you want to reset everything? There's no turning back!

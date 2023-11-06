@@ -183,7 +183,7 @@ const OutlineGenerator = ({ exercises }) => {
 
     return (
         <>
-            <div align="left">
+            <div>
                 <Button variant="outline-dark" className="fw-bold" onClick={handleGenerateClick}>Generate Outline</Button>
                 <Button variant="outline-success" className="fw-bold" onClick={handleExportClick}>Generate Excel</Button>
             </div>
