@@ -77,28 +77,6 @@ function App() {
         <header className="App-header">
           <img src="/logo512.png" alt="Workout Plan Generator Logo" className="App-logo" />
           <h1>Workout Plan Generator</h1>
-          {/* <div>
-            <Dropdown>
-              <Dropdown.Toggle
-
-                size="sm"
-                id="debugging">
-                Debugging
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => prettyPrintState(exercises)}>
-                  Console Log State
-                </Dropdown.Item>
-                <Dropdown.Item >
-                  UNK
-                </Dropdown.Item>
-                <Dropdown.Item >
-                  UNK
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div> */}
           <Button variant="primary" onClick={handleShow}>
             Read Me!
           </Button>

@@ -48,7 +48,7 @@
 }
 
 .App-header button {
-  background-color: #15a4fa;
+  background-color: #3f6481;
   color: white;
   border: 1px solid black;
   padding: 8px 12px;
@@ -58,7 +58,7 @@
 }
 
 .App-header button:hover {
-  background-color: #1082c7;
+  background-color: #3d5369;
 }
 
 .App-link {
@@ -86,6 +86,7 @@ input[type=number] {
 .WorkoutTableWrapper {
   margin: auto;
   max-width: 1200px;
+  height: auto;
 }
 
 /* Applies to the last child if it is also the first child (meaning there's only one child) */
